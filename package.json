@@ -1,0 +1,32 @@
+{
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "install": "^0.13.0",
+    "js-cookie": "^3.0.5",
+    "mongoose": "^9.1.4",
+    "multer": "^2.0.2"
+  },
+  "name": "smv-ecom",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anus26/SMV-ECOM.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/anus26/SMV-ECOM/issues"
+  },
+  "homepage": "https://github.com/anus26/SMV-ECOM#readme"
+}
