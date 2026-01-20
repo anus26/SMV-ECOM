@@ -3,7 +3,7 @@ import User from "../models/user.models.js"
 import bcrypt, { hash }  from "bcryptjs";
 
 
-const singup=async(req,res)=>{
+const sigup=async(req,res)=>{
     let {name,email,password,role}=req.body
     try {
         const users=await User.findOne({email})
@@ -50,4 +50,4 @@ const sigin=async(req,res)=>{
         res.status(500).json({error:"internal server error"})
     }
 }
-export {singup,sigin}
+export {sigup,sigin}

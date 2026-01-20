@@ -1,4 +1,4 @@
-import User from "../models/user.models"
+import User from "../models/user.models.js"
 import  jwt from 'jsonwebtoken'
 const authmiddleware=async(req,res,next)=>{
          const token=req.cookies.jwt
@@ -20,4 +20,22 @@ const authmiddleware=async(req,res,next)=>{
          }
 
 }
-export default authmiddleware
+
+const validationmiddleware=async(req,res,next)=>{
+   const {name,email,password,role}=req.body||{}
+   if (!name||name.length < 3) {
+      return res.status(400).json({erro:"name must be at least 3 Characters"})
+   }
+    if (!email || !email.includes('@')) {
+    return res.status(400).json({ error: 'Valid email is required' });
+  }
+  
+  if (!password || password.length < 6) {
+    return res.status(400).json({ error: 'Password must be at least 6 characters' });
+  }
+  if(!role ){
+   return res.status(400).json({error:"role is required"})
+  }
+   next()
+}
+export { authmiddleware,validationmiddleware}
