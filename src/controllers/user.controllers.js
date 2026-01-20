@@ -1,3 +1,4 @@
+import createTokencookie from "../../jwt/genrettoken.js";
 import User from "../models/user.models.js"
 import bcrypt, { hash }  from "bcryptjs";
 
@@ -14,7 +15,12 @@ const singup=async(req,res)=>{
                 name,email,password:hashpassword,role
             })
             await user.save()
-      res.status(201).json({message:"user singup successfully",user})
+     
+        createTokencookie(res,user._id)
+
+const {password:_,...safeUser}=user._doc
+        res.status(201).json({message:"user singup successfully",safeUser})
+    
         
     } catch (error) {
             console.log(error);
@@ -22,4 +28,26 @@ const singup=async(req,res)=>{
     }
 }
 
-export {singup}
+
+const sigin=async(req,res)=>{
+    try{
+    const {email,password}=req.body
+    const user=await User.findOne({email})
+    if (!user) {
+     return   res.status(401).json({error:"user not found"})  
+    }
+    const isMatch=await bcrypt.compare(password,user.password)
+    if (!isMatch) {
+            res.status(401).json({error:"Password not isMatch "})   
+    }
+    createTokencookie(res,user._id)
+ 
+    const { password: _, ...safeUser } = user._doc;
+    res.status(200).json({message:"user singin successfully",safeUser})
+}
+         catch (error) {
+         console.log(error);
+        res.status(500).json({error:"internal server error"})
+    }
+}
+export {singup,sigin}
