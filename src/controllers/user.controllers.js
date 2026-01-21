@@ -16,7 +16,7 @@ const sigup=async(req,res)=>{
             })
             await user.save()
      
-        createTokencookie(res,user._id)
+        createTokencookie(res,user._id,user.role)
 
 const {password:_,...safeUser}=user._doc
         res.status(201).json({message:"user singup successfully",safeUser})
@@ -50,4 +50,15 @@ const sigin=async(req,res)=>{
         res.status(500).json({error:"internal server error"})
     }
 }
-export {sigup,sigin}
+
+const alluser=async(req,res)=>{
+    try {
+        const user=await User.find()
+        res.status(201).json({message:"All user",user})
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({message:"Internal server error"})
+        
+    }
+}
+export {sigup,sigin,alluser}

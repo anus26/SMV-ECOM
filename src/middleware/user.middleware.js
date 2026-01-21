@@ -6,9 +6,9 @@ const authmiddleware=async(req,res,next)=>{
             return res.status(401).json({message:"UnAthorized:No token Provided "})
          }
          try {
-            const decoded=jwt.verify(process.env.JWT,{expirseIn:"7d"})
+            const decoded=jwt.verify(token,process.env.JWT)
             req.user=decoded
-            const user=await User.findById(decoded.user._id).select("-password")
+            const user=await User.findById(decoded.userId).select("-password")
             if (!user) {
                 res.status(401).json({message:"No user find"})
                 
@@ -38,4 +38,15 @@ const validationmiddleware=async(req,res,next)=>{
   }
    next()
 }
-export { authmiddleware,validationmiddleware}
+
+const authorizationRole=(...allowedRoles)=>{
+return (req,res,next)=>{
+   if (!allowedRoles.includes(req.user.role)) {
+         return res.status(403).json({
+        message: "Aap ko is kaam ki permission nahi"
+      });
+   }
+   next()
+}
+}
+export { authmiddleware,validationmiddleware,authorizationRole}
