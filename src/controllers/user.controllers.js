@@ -82,7 +82,7 @@ const logout=async(req,res)=>{
         const {id}=req.params;
         const user=await User.findByIdAndDelete(id)
     res.clearCookie('jwt')
-    res.status(200).json({message:"User delete Successfully"})
+    res.status(200).json({message:"User delete Successfully",user})
     } catch (error) {
          console.log(error);
         res.status(500).json({message:"Internal server error"}) 
