@@ -5,6 +5,7 @@ import connectDB from './src/Config/db.js'
 import cors from 'cors'
 import router from './src/routes/user.routes.js'
 import cookieParser from 'cookie-parser'
+import productrouter from './src/routes/prodcut.routes.js'
 
 const app = express()
 app.use(express.json());
@@ -17,6 +18,7 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 })
 app.use("/api/v1/user",router)
+app.use("/api/v1/Product",productrouter)
 app.listen(process.env.PORT, () => {
   console.log(`Example app listening on port ${process.env.PORT}`)
 })
