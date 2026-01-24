@@ -42,8 +42,46 @@ const updateproduct=async(req,res)=>{
     res.status(201).json({message:'update by one product',product})
     } catch (error) {
         console.error(error);
-        res.status(500).json({message:"Internal server error"})
+        return  res.status(500).json({message:"Internal server error"})
         
     }
 }
-export {productadd,updateproduct}
+const getallproduct=async(req,res)=>{
+    try {
+        const getproduct=await  Product.find()
+        res.status(200).json({message:"Get all product",getproduct})
+
+    } catch (error) {
+                console.error(error);
+        return  res.status(500).json({message:"Internal server error"})
+    }
+}
+const getoneproduct=async(req,res)=>{
+    try {
+        const {id}=req.params
+        const product=await Product.findById(id)
+        if(!product){
+            return res.status(400).json({message:"product not avalible"})
+        }
+        res.status(200).json({message:"get product",product})
+    } catch (error) {
+                console.error(error);
+        return  res.status(500).json({message:"Internal server error"})
+        
+    }
+}
+const deleteproduct=async(req,res)=>{
+    try {
+        const {id}=req.params
+        const product=await Product.findByIdAndDelete(id)
+        if (!product) {
+            return res.status(400).json({message:"Product Not avalible"})
+        }
+        res.status(200).json({message:"product delete successfully"})
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({message:"Internal server error"})
+        
+    }
+}
+export {productadd,updateproduct,getallproduct,getoneproduct,deleteproduct}
