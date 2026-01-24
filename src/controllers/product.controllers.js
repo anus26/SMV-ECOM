@@ -24,4 +24,26 @@ const uploadResult = await cloudinary.uploader.upload(
     }
 
 }
-export {productadd}
+
+const updateproduct=async(req,res)=>{
+    try {
+        const {id}=req.params
+        const updateFields={}
+        if (req.body.title) updateFields.title = req.body.title;
+    if (req.body.description) updateFields.description = req.body.description;
+    if (req.body.price) updateFields.price = req.body.price;
+    if (req.body.stock) updateFields.stock = req.body.stock;
+
+    if (req.file) {
+        updateFields.image=req.file.path
+    }
+    
+    const product=await Product.findByIdAndUpdate(id, { $set: updateFields },{new:true,runValidators:true})
+    res.status(201).json({message:'update by one product',product})
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({message:"Internal server error"})
+        
+    }
+}
+export {productadd,updateproduct}
