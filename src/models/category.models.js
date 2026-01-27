@@ -1,12 +1,13 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose from "mongoose";
 
 const categorySchema=new mongoose.Schema({
-    name:{tpye:String,required:true},
+    name:{type:String,
+        required:true},
      parentCategory: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Category",
     default: null,
   },
 },{timestamps:true})
-const Category=Schema.model("category",categorySchema)
+const Category=mongoose.model("category",categorySchema)
 export default Category

@@ -11,9 +11,9 @@ const uploadResult = await cloudinary.uploader.upload(
   { folder: "products" }
 );
 
-        const {title,description,price,stock}=req.body
+        const {title,description,price,stock,category}=req.body
         const product=new Product({
-            title,description,price,stock, image:uploadResult.secure_url,
+            title,description,price,stock, image:uploadResult.secure_url,category
         })
         await product.save()
         res.status(201).json({message:'Product add successfully',product})
