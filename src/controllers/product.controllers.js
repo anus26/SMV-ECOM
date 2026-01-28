@@ -1,3 +1,4 @@
+import Category from "../models/category.models.js";
 import Product from "../models/product.models.js";
 import cloudinary from "../uploads/images.js";
 
@@ -84,4 +85,30 @@ const deleteproduct=async(req,res)=>{
         
     }
 }
-export {productadd,updateproduct,getallproduct,getoneproduct,deleteproduct}
+const getproductcategory=async(req,res)=>{
+    try {
+      const {id}=req.params
+      const category=await Category.findById(id)
+         if (!category) {
+      return res.status(404).json({ message: "Category not found" });
+    }
+    const childcategory=await Category.find({
+        parentCategory:id
+    }).select("_id")
+    let product=[]
+  if (childcategory.length>0 ) {
+    product=await Product.find({
+        category:{$in: childcategory.map(c=>c._id)}
+    }).populate("category","name")
+  }else{
+    product=await Product.find({
+      category:id
+    }).populate("category","name")
+  }
+      
+      res.status(200).json({message:"Product get successfully",product})  
+    } catch (error) {
+        return res.status(500).json({message:"Internal server error"})
+    }
+}
+export {productadd,updateproduct,getallproduct,getoneproduct,deleteproduct,getproductcategory}
