@@ -76,6 +76,21 @@ const userbyId=async(req,res)=>{
         
     }
 }
+const getMe=async(req,res)=>{
+    try {
+        const userId=req.user
+        const user=await User.findById(userId).select("-password")
+           if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+      res.status(200).json({
+      success: true,
+      user,
+    });
+    } catch (error) {
+          res.status(500).json({ message: error.message });
+    }
+}
 
 const logout=async(req,res)=>{
     try {
@@ -88,4 +103,4 @@ const logout=async(req,res)=>{
         res.status(500).json({message:"Internal server error"}) 
     }
 }
-export {sigup,sigin,alluser,userbyId,logout}
+export {sigup,sigin,alluser,userbyId,logout,getMe}

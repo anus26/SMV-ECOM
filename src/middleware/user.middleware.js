@@ -2,6 +2,8 @@ import User from "../models/user.models.js"
 import  jwt from 'jsonwebtoken'
 const authmiddleware=async(req,res,next)=>{
          const token=req.cookies.jwt
+         console.log(token);
+         
          if (!token) {
             return res.status(401).json({message:"UnAthorized:No token Provided "})
          }
