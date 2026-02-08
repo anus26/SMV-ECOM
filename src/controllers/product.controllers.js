@@ -37,7 +37,14 @@ const updateproduct=async(req,res)=>{
 
     if (req.file) {
         updateFields.image=req.file.path
+        const uploadResult=await cloudinary.uploader.upload(
+            (req.file.path),
+            {folder:"products"}
+        )
+         updateFields.image = uploadResult.secure_url;
     }
+
+    
     
     const product=await Product.findByIdAndUpdate(id, { $set: updateFields },{new:true,runValidators:true})
     res.status(201).json({message:'update by one product',product})
@@ -78,7 +85,7 @@ const deleteproduct=async(req,res)=>{
         if (!product) {
             return res.status(400).json({message:"Product Not avalible"})
         }
-        res.status(200).json({message:"product delete successfully"})
+        res.status(200).json({message:"product delete successfully" , productId: id, })
     } catch (error) {
         console.error(error);
         return res.status(500).json({message:"Internal server error"})
