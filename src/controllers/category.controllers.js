@@ -3,10 +3,15 @@ import Product from "../models/product.models.js"
 
 const categoryadd=async(req,res)=>{
     try {
-        const {name,parentCategory}=req.body
+        console.log("REQ BODY:", req.body);
+
+        let { name, parentCategory } = req.body;
         if(!name) return res.status(400).json({message:"name is required"})
+              if (!parentCategory) {
+      parentCategory = null;
+    }
             const category= new Category({
-        name,parentCategory
+        name,   parentCategory
         })
         await category.save()
         res.status(201).json({message:"category is add",category})
@@ -31,4 +36,15 @@ const get=async(req,res)=>{
   res.status(500).json({ message: "Server error" });
     }
 }
-export {categoryadd,get}
+const getallcategory=async(req,res)=>{
+    try {
+        const category=await Category.find()
+        res.status(200).json({message:"All category",category})
+    }
+catch (error) {
+        console.error(error);
+        return res.status(500).json({message:"Internal server error"})
+    }
+}
+
+export {categoryadd,get,getallcategory}
