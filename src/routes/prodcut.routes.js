@@ -11,6 +11,6 @@ productrouter.put("/update/:id",
 productrouter.get("/get", getallproduct) 
 productrouter.get("/oneproduct/:id",getoneproduct)    
 productrouter.delete("/deleteproduct/:id",deleteproduct)
-productrouter.get("/get/:id",getproductcategory)
+productrouter.get("/get/:parentslug/:childslug",getproductcategory)
 export default  productrouter
 

@@ -94,28 +94,46 @@ const deleteproduct=async(req,res)=>{
 }
 const getproductcategory=async(req,res)=>{
     try {
-      const {id}=req.params
-      const category=await Category.findById(id)
-         if (!category) {
-      return res.status(404).json({ message: "Category not found" });
-    }
-    const childcategory=await Category.find({
-        parentCategory:id
-    }).select("_id")
-    let product=[]
-  if (childcategory.length>0 ) {
-    product=await Product.find({
-        category:{$in: childcategory.map(c=>c._id)}
-    }).populate("category","name")
-  }else{
-    product=await Product.find({
-      category:id
-    }).populate("category","name")
-  }
-      
-      res.status(200).json({message:"Product get successfully",product})  
+        const {parentslug,childslug}=req.params
+        const parentCategory=await Category.findOne({
+        slug:parentslug
+        })
+        if (!parentCategory) {
+            return res.status(404).json({ message: "Parent category not found" });
+            
+        }
+        let categoryIds = [];
+        if (childslug) {
+            const childCategory=await Category.findOne({
+                slug:childslug,
+                parentCategory:parentCategory._id
+            })
+            
+            if (!childCategory) {
+                return res.status(404).json({ message: "Child category not found" });
+            }
+            categoryIds.push(childCategory._id);
+
+        }else{
+            const childCategory=await Category.find({
+                parentCategory:parentCategory._id
+
+            }).select("_id")
+            categoryIds=childCategory.map(c=>c._id)
+            if (categoryIds.length===0) {
+                categoryIds.push(parentCategory._id)
+                
+            }
+        }
+
+        const products=await Product.find({
+            category:{$in:categoryIds},
+        }).populate('category',"name slug")
+
+  res.json({message:"category get successfully",products,parentCategory});
     } catch (error) {
-        return res.status(500).json({message:"Internal server error"})
+        
+  res.status(500).json({ message: "Server error" });
     }
 }
 export {productadd,updateproduct,getallproduct,getoneproduct,deleteproduct,getproductcategory}
