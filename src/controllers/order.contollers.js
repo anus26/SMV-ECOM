@@ -52,24 +52,32 @@ const orderget=async(req,res)=>{
         
     }
 }
-const orderupdata=async(req,res)=>{
- try {
-      const {id}=req.params
-      const updataFileds={}
-      if (req.body.items) updataFileds.items=req.body.items
-          if (req.body.status) updataFileds.status=req.body.status
-              if (req.body.totalAmount) updataFileds.totalAmount=req.body.totalAmount
-      const orderupdatas=await Order.findByIdAndUpdate(id,{$set:updataFileds},{new:true,runValidators:true})
-      if (!order) {
-           return res.status(400).json({message:'Order not'})
-      } 
-      res.status(201).json({message:'Order updata',orderupdatas})
- } catch (error) {
-       console.error('error',error);
-        return res.status(500).json({message:"Internal server error"})
- }
+const orderupdata = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updateFields = {};
 
-}
+    if (req.body.items) updateFields.items = req.body.items;
+    if (req.body.status) updateFields.status = req.body.status;
+    if (req.body.totalAmount) updateFields.totalAmount = req.body.totalAmount;
+
+    const orderupdatas = await Order.findByIdAndUpdate(
+      id,
+      { $set: updateFields },
+      { new: true, runValidators: true }
+    );
+
+    if (!orderupdatas) {
+      return res.status(400).json({ message: "Order not found" });
+    }
+
+    res.status(200).json({ message: "Order updated", orderupdatas });
+  } catch (error) {
+    console.error("error", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 const allorder=async(req,res)=>{
     try {
         const allorders=await Order.find()
