@@ -9,7 +9,7 @@ items: [
     price: Number
   }
 ],
-    totalAmount:{type:Number,required:true},
+    totalAmount:{type:Number},
     status:{type:String,
     enum: ["pending", "confirmed", "shipped", "delivered", "cancelled"],
       default: "pending",

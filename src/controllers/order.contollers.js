@@ -55,6 +55,10 @@ const orderget=async(req,res)=>{
 const orderupdata = async (req, res) => {
   try {
     const { id } = req.params;
+    
+    if (!req.body) {
+      return res.status(400).json({ message: "No data sent" });
+    }
     const updateFields = {};
 
     if (req.body.items) updateFields.items = req.body.items;
