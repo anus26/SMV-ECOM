@@ -1,19 +1,36 @@
 import Order from "../models/ordermodels.js"
+import Product from "../models/product.models.js";
 
 const order=async(req,res)=>{
     try {
           console.log("USER:", req.user);
     console.log("BODY:", req.body);
-        const {items,totalAmount,}=req.body
+        const {items}=req.body
         const customerid=req.user._id
-          if ( !items || items.length === 0 || totalAmount===null ) {
-      return res.status(400).json({ message: "All fields are required" });
-    }
+        if ( !items || items.length === 0  ) {
+            return res.status(400).json({ message: "All fields are required" });
+        }
+        let totalAmount=0
+        let updatedItems=[]
 
+        for(let item of items){
+            const product =await Product.findById(item.productId)
+               if (!product) {
+        return res.status(404).json({ message: "Product not found" });
+      }
+      const itemTotal=product.price*item.quantity
+      totalAmount +=itemTotal
+           updatedItems.push({
+        productId: product._id,
+        sellerId: product.sellerId,  
+        quantity: item.quantity,
+        price: product.price
+      });
+        }
         const order=new Order({
             customerid,
-            items,
-            totalAmount,
+           items:updatedItems,
+           totalAmount
             
         })
         await order.save()
