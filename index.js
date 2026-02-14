@@ -8,7 +8,7 @@ import cookieParser from 'cookie-parser'
 import productrouter from './src/routes/prodcut.routes.js'
 import orderRoutes from './src/routes/order.routes.js'
 import categoryrouter from './src/routes/category.routes.js'
-
+import revenuerouter from "./src/routes/revenue.routes.js"
 const app = express()
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -26,6 +26,7 @@ app.use("/api/v1/user",router)
 app.use("/api/v1/Product",productrouter)
 app.use("/api/v1/order",orderRoutes)
 app.use("/api/v1/category",categoryrouter)
+app.use("/api/v1/revenue",revenuerouter)
 app.listen(process.env.PORT, () => {
   console.log(`Example app listening on port ${process.env.PORT}`)
 })

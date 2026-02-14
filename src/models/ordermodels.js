@@ -5,15 +5,19 @@ const orderSchema=new  mongoose.Schema({
   
 items: [
   {
-    productId: mongoose.Schema.Types.ObjectId,
-    stock: Number,
-    price: Number,
-      sellerId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
-      },
+    productId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Product"
+    },
+    sellerId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User"
+    },
+    quantity: Number,
+    price: Number
   }
 ],
+
     totalAmount:{type:Number},
     status:{type:String,
     enum: ["pending", "confirmed", "shipped", "delivered", "cancelled"],

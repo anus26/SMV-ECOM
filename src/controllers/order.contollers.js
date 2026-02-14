@@ -17,6 +17,8 @@ const order=async(req,res)=>{
             const product =await Product.findById(item.productId)
                if (!product) {
         return res.status(404).json({ message: "Product not found" });
+        
+
       }
       const itemTotal=product.price*item.quantity
       totalAmount +=itemTotal
