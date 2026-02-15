@@ -8,7 +8,16 @@ const userSchema=new mongoose.Schema({
             type:String,
       enum:  ["Admin","seller","customer"],
        default: "customer"
-    }
+    },
+        isApproved: {
+      type: Boolean,
+      default: false, // only for seller
+    },
+
+    isBlocked: {
+      type: Boolean,
+      default: false,
+    },
 },{timestamps:true})
 const User=mongoose.model("user",userSchema)
 export default User

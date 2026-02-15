@@ -7,5 +7,5 @@ router.post("/signin",sigin)
 router.get("/alluser",authmiddleware,authorizationRole('Admin'),alluser)
 router.get("/user/:id",authmiddleware,authorizationRole('Admin'),userbyId)
 router.get("/me",authmiddleware,getMe)
-router.delete("/delete/:id",authmiddleware,authorizationRole('Admin'),logout)
+router.delete("/delete/:id",authmiddleware,logout)
 export default router

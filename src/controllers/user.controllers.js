@@ -40,6 +40,15 @@ const sigin=async(req,res)=>{
     if (!isMatch) {
             res.status(401).json({error:"Password not isMatch "})   
     }
+    if (user.isBlocked) {
+          return res.status(403).json({ message: "Your account is blocked" });
+    }
+    if (user.role === "seller" && !user.isApproved) {
+  return res.status(403).json({
+    message: "Seller not approved yet"
+  });
+}
+
     createTokencookie(res,user._id)
  
     const { password: _, ...safeUser } = user._doc;
@@ -103,4 +112,6 @@ const logout=async(req,res)=>{
         res.status(500).json({message:"Internal server error"}) 
     }
 }
+
+
 export {sigup,sigin,alluser,userbyId,logout,getMe}

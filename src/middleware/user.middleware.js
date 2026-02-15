@@ -36,7 +36,7 @@ const authmiddleware=async(req,res,next)=>{
          if (!password || password.length < 6) {
             return res.status(400).json({ error: 'Password must be at least 6 characters' });
          }
-         console.log(user.role);
+         // console.log(user.role);
   if(!role ){
    return res.status(400).json({error:"role is required"})
   }

@@ -39,7 +39,7 @@ const getTotalRevenue = async (req, res) => {
   }
 };
 const getdailyRevenue=async(req,res)=>{
-  try {
+  try { 
    const sellerId=req.user._id
    const revenue=await Order.aggregate([
     {$unwind:"$items"},
@@ -84,12 +84,18 @@ const getMonthlyRevenue = async (req, res) => {
           status: "confirmed"
         }
       },
-      {
-        $group: {
-          _id: { $month: "$createdAt" },
+    {$group:{
+      _id:{
+        $dateToString: {
+        format:"%Y,-%m",
+          date: { $toDate: "$createdAt" } 
+      }},
+   totalRevenue: {
+    $sum: {
       $multiply: ["$items.price", "$items.quantity"]
-        }
-      }
+    }
+   }
+  }}
       
     ]);
 
