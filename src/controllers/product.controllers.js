@@ -57,7 +57,15 @@ const updateproduct=async(req,res)=>{
 }
 const getallproduct=async(req,res)=>{
     try {
-        const getproduct=await  Product.find()
+           let getproduct;
+
+    if (req.user.role === "seller") {
+      // sirf apne products
+      getproduct = await Product.find({ sellerId: req.user._id });
+    } else {
+      // admin ya customer sab dekh sakta hai
+      products = await Product.find();
+    }
         res.status(200).json({message:"Get all product",getproduct})
 
     } catch (error) {

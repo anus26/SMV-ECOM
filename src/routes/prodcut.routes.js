@@ -8,9 +8,9 @@ productrouter.post("/add",upload.single("image"),authmiddleware,authorizationRol
 productrouter.put("/update/:id", 
     upload.single("image"),authmiddleware,authorizationRole("seller"),
      updateproduct)
-productrouter.get("/get", authorizationRole("Admin") ,getallproduct) 
+productrouter.get("/get" ,authmiddleware,getallproduct) 
 productrouter.get("/oneproduct/:id",getoneproduct)    
-productrouter.delete("/deleteproduct/:id",authorizationRole("Admin"), deleteproduct)
+productrouter.delete("/deleteproduct/:id",authmiddleware,authorizationRole("seller"), deleteproduct)
 productrouter.get("/get/:parentslug",getproductcategory)
 productrouter.get("/get/:parentslug/:childslug",getproductcategory)
 export default  productrouter

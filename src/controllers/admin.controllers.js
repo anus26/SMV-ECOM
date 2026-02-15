@@ -15,7 +15,7 @@ const approveseller=async(req,res)=>{
         }
         seller.isApproved=true
         await seller.save()
-            res.json({ message: "Seller approved successfully" });
+            res.json({ message: "Seller approved successfully",seller });
     } catch (error) {
           res.status(500).json({ message: error.message });
   

@@ -64,6 +64,9 @@ const orderget=async(req,res)=>{
         if (!ordergets) {
                  return res.status(400).json({message:'Order not'})
         }
+        if (req.user.role==="seller") {
+            orderget=await Order.ind
+        }
         res.status(200).json({message:'order get successfully',ordergets})
     } catch (error) {
         console.error('error',error);
@@ -103,10 +106,15 @@ const orderupdata = async (req, res) => {
 
 const allorder=async(req,res)=>{
     try {
-        const allorders=await Order.find()
-        if (!allorders) {
-            return res.status(400).json({message:"Order are not avalibliy"})
-        }
+       let allorders;
+
+    if (req.user.role === "seller") {
+      // sirf seller ke orders
+      allorders = await Order.find({ sellerId: req.user._id });
+    } else {
+      allorders = await Order.find();
+    }
+
         res.status(200).json({message:"All  order is availbaly" ,allorders})
     } catch (error) { 
          console.error('error',error);
