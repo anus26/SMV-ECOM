@@ -60,11 +60,11 @@ const getallproduct=async(req,res)=>{
            let getproduct;
 
     if (req.user.role === "seller") {
-      // sirf apne products
-      getproduct = await Product.find({ sellerId: req.user._id });
+
+       getproduct = await Product.find({ sellerId: req.user._id });
     } else {
-      // admin ya customer sab dekh sakta hai
-      products = await Product.find();
+
+      getproduct = await Product.find();
     }
         res.status(200).json({message:"Get all product",getproduct})
 
