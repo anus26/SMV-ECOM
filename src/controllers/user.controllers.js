@@ -62,7 +62,13 @@ const sigin=async(req,res)=>{
 
 const alluser=async(req,res)=>{
     try {
-        const user=await User.find()
+        let User
+        if (req.user.role === "customer" || req.user.role === "seller") {
+            user = await User.find({ sellerId: req.user._id });  
+        }else{
+
+             user=await User.find()
+        }
         res.status(200).json({message:"All user",user})
     } catch (error) {
         console.log(error);
