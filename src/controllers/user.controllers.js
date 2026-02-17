@@ -109,8 +109,7 @@ const getMe=async(req,res)=>{
 
 const logout=async(req,res)=>{
     try {
-        const {id}=req.params;
-        const user=await User.findByIdAndDelete(id)
+        
     res.clearCookie('jwt')
     res.status(200).json({message:"User delete Successfully",user})
     } catch (error) {

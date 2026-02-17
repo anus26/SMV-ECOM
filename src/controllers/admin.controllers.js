@@ -1,4 +1,5 @@
 import Order from "../models/ordermodels.js"
+import Product from "../models/product.models.js"
 import User from "../models/user.models.js"
 
 
@@ -34,9 +35,15 @@ const blockuser=async(req,res)=>{
 const getplatformstats=async(req,res)=>{
     const totalUsers=await User.countDocuments()
     const totalOrders=await Order.countDocuments()
+    const totalProducts=await Product.countDocuments()
+     const totalSellers=await User.countDocuments({role:"seller"})
+     const totalCustomer=await User.countDocuments({role:"customer"})
     res.json({
         totalUsers,
-        totalOrders
+        totalOrders,
+        totalProducts,
+        totalSellers,
+        totalCustomer
     })
 }
 export { approveseller,getalluser,blockuser,getplatformstats}
