@@ -104,21 +104,36 @@ const orderupdata = async (req, res) => {
   }
 };
 
-const allorder=async(req,res)=>{
-    try {
-       let allorders;
+const allorder = async (req, res) => {
+  try {
+    let allorders;
 
-    if (req.user.role === "seller") {
-      // sirf seller ke orders
-      allorders = await Order.find({ sellerId: req.user._id });
-    } else {
+    if (req.user.role === "customer") {
+      allorders = await Order.find({ customerid: req.user._id });
+    } 
+    else if (req.user.role === "seller") {
+
+      const sellerProducts = await Product.find({ sellerId: req.user._id });
+      const productIds = sellerProducts.map(p => p._id);
+
+      allorders = await Order.find({
+        "items.productId": { $in: productIds }
+      });
+    } 
+    else {
+      // admin
       allorders = await Order.find();
     }
 
-        res.status(200).json({message:"All  order is availbaly" ,allorders})
-    } catch (error) { 
-         console.error('error',error);
-        return res.status(500).json({message:"Internal server error"})
-    }
-}
+    res.status(200).json({
+      message: "All orders available",
+      allorders
+    });
+
+  } catch (error) {
+    console.error("error", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 export {order,orderdelete,orderget,orderupdata,allorder}
