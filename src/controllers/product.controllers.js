@@ -37,12 +37,12 @@ const updateproduct=async(req,res)=>{
     if (req.body.stock) updateFields.stock = req.body.stock;
 
     if (req.file) {
-        updateFields.image=req.file.path
+        updateFields.images=req.file.path
         const uploadResult=await cloudinary.uploader.upload(
             (req.file.path),
             {folder:"products"}
         )
-         updateFields.image = uploadResult.secure_url;
+         updateFields.images = uploadResult.secure_url;
     }
 
     

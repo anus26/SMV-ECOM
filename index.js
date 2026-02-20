@@ -14,7 +14,8 @@ const app = express()
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
-  origin:"https://frontend-smv-ecom-b43cybf3x-anusrazas-projects.vercel.app",
+  // origin:"https://frontend-smv-ecom-b43cybf3x-anusrazas-projects.vercel.app",
+  origin:'http://localhost:5173',
   credentials:true
 }))
 app.use(cookieParser())

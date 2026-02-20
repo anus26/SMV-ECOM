@@ -4,7 +4,7 @@ import upload from "../uploads/multer.js";
 import { authmiddleware, authorizationRole } from "../middleware/user.middleware.js";
 
 const productrouter=express.Router()
-productrouter.post("/add",upload.single("image"),authmiddleware,authorizationRole("seller"), productadd)
+productrouter.post("/add",upload.single("images",2),authmiddleware,authorizationRole("seller"), productadd)
 productrouter.put("/update/:id", 
     upload.single("image"),authmiddleware,authorizationRole("seller"),
      updateproduct)
