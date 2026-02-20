@@ -3,30 +3,47 @@ import Product from "../models/product.models.js";
 import cloudinary from "../uploads/images.js";
 import user from "../models/user.models.js"
 
-const productadd=async(req,res)=>{
-    try {
-        if (!req.file) {
-    return res.status(400).json({ message: "image is required" });
-    }
-const uploadResult = await cloudinary.uploader.upload(
-  req.file.path,
-  { folder: "products" }
-);
-
-        const {title,description,price,stock,category}=req.body
-        const product=new Product({
-            title,description,price,stock, image:uploadResult.secure_url,category,sellerId:req.user._id
-        })
-        await product.save()
-        res.status(201).json({message:'Product add successfully',product})
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({message:"internal server error"})
-        
+const productadd = async (req, res) => {
+  try {
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ message: "Images are required" });
     }
 
-}
+    const imageUrls = [];
 
+    for (const file of req.files) {
+      const uploadResult = await cloudinary.uploader.upload(
+        file.path,
+        { folder: "products" }
+      );
+
+      imageUrls.push(uploadResult.secure_url);
+    }
+
+    const { title, description, price, stock, category } = req.body;
+
+    const product = new Product({
+      title,
+      description,
+      price,
+      stock,
+      images: imageUrls, // array save karo
+      category,
+      sellerId: req.user._id,
+    });
+
+    await product.save();
+
+    res.status(201).json({
+      message: "Product add successfully",
+      product,
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
 const updateproduct=async(req,res)=>{
     try {
         const {id}=req.params
@@ -36,14 +53,17 @@ const updateproduct=async(req,res)=>{
     if (req.body.price) updateFields.price = req.body.price;
     if (req.body.stock) updateFields.stock = req.body.stock;
 
-    if (req.file) {
-        updateFields.images=req.file.path
-        const uploadResult=await cloudinary.uploader.upload(
-            (req.file.path),
-            {folder:"products"}
-        )
-         updateFields.images = uploadResult.secure_url;
+ if (req.files && req.files.length > 0) {
+      const uploadedImages = [];
+      for (const file of req.files) {
+        const uploadResult = await cloudinary.uploader.upload(file.path, {
+          folder: "products",
+        });
+        uploadedImages.push(uploadResult.secure_url);
+      }
+      updateFields.images = uploadedImages;
     }
+ 
 
     
     

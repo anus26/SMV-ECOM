@@ -16,10 +16,10 @@ const sigup=async(req,res)=>{
             })
             await user.save()
      
-        createTokencookie(res,user._id,user.role)
+      const token=  createTokencookie(res,user._id,user.role)
 
 const {password:_,...safeUser}=user._doc
-        res.status(201).json({message:"user singup successfully",safeUser, jwt: token, })
+        res.status(201).json({message:"user singup successfully",safeUser, jwt:token, })
     
         
     } catch (error) {
@@ -45,14 +45,14 @@ const sigin=async(req,res)=>{
     }
     if (user.role === "seller" && !user.isApproved) {
   return res.status(403).json({
-    message: "Seller not approved yet", jwt: token, 
+    message: "Seller not approved yet" 
   });
 }
 
-    createTokencookie(res,user._id)
+    const token=createTokencookie(res,user._id)
  
     const { password: _, ...safeUser } = user._doc;
-    res.status(200).json({message:"user singin successfully",safeUser})
+    res.status(200).json({message:"user singin successfully",safeUser,jwt:token})
 }
          catch (error) {
          console.log(error);

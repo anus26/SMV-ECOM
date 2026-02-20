@@ -11,5 +11,6 @@ expiresIn: "7d"
         sameSite:"None" , 
         maxAge: 10 * 24 * 60 * 60 * 1000  
     })
+    return token
 }
 export default createTokencookie
