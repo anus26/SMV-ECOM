@@ -20,9 +20,10 @@ items: [
 
     totalAmount:{type:Number},
     status:{type:String,
-    enum: ["pending", "confirmed", "shipped", "delivered", "cancelled"],
+    enum: ["pending", "paid"],
       default: "pending",
-    }
+    },
+    stripePaymentIntentId:String
 },{timestamps:true})
 const Order=mongoose.model("order",orderSchema)
 export default Order

@@ -16,7 +16,7 @@ const sigup=async(req,res)=>{
             })
             await user.save()
      
-      const token=  createTokencookie(res,user._id,user.role)
+      const token=  createTokencookie(res,user)
 
 const {password:_,...safeUser}=user._doc
         res.status(201).json({message:"user singup successfully",safeUser, jwt:token, })
@@ -38,7 +38,7 @@ const sigin=async(req,res)=>{
     }
     const isMatch=await bcrypt.compare(password,user.password)
     if (!isMatch) {
-            res.status(401).json({error:"Password not isMatch "})   
+         return  res.status(401).json({error:"Password not isMatch "})   
     }
     if (user.isBlocked) {
           return res.status(403).json({ message: "Your account is blocked" });
@@ -49,7 +49,7 @@ const sigin=async(req,res)=>{
   });
 }
 
-    const token=createTokencookie(res,user._id)
+    const token=createTokencookie(res,user)
  
     const { password: _, ...safeUser } = user._doc;
     res.status(200).json({message:"user singin successfully",safeUser,jwt:token})

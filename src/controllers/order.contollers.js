@@ -1,3 +1,4 @@
+import { stripe } from "../configstripe/stripe.js";
 import Order from "../models/ordermodels.js"
 import Product from "../models/product.models.js";
 
@@ -29,6 +30,24 @@ const order=async(req,res)=>{
         price: product.price
       });
         }
+        if(totalAmount < 50) {
+  totalAmount = 50; // for testing, safe portfolio demo
+}
+        const newOrder=new Order({
+            customerid,
+            items:updatedItems,
+            totalAmount,
+        })
+        await newOrder.save()
+        const paymentIntend=await stripe.paymentIntents.create({
+            amount:totalAmount*100,
+            currency:"inr",
+            metadata:{
+                orderId:newOrder._id.toString()
+            }
+        })
+        newOrder.stripePaymentIntentId=paymentIntend.id
+        await newOrder.save()
         const order=new Order({
             customerid,
            items:updatedItems,
@@ -36,7 +55,7 @@ const order=async(req,res)=>{
             
         })
         await order.save()
-        res.status(201).json({message:"Order is  successfully add",order})
+        res.status(201).json({message:"Order is  successfully add",order:newOrder ,ClinetSecret:paymentIntend.client_secret})
     } catch (error) {
         console.error(error);
         return res.status(500).json({message:"Internal server error"})

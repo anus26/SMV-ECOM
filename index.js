@@ -10,7 +10,10 @@ import orderRoutes from './src/routes/order.routes.js'
 import categoryrouter from './src/routes/category.routes.js'
 import revenuerouter from "./src/routes/revenue.routes.js"
 import adminrouter from './src/routes/admin.routes.js'
+import webhookrouter from './src/routes/webhook.routes.js'
+
 const app = express()
+app.use("/api/v1",webhookrouter)
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({

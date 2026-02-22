@@ -13,9 +13,10 @@ const authmiddleware=async(req,res,next)=>{
             req.user=decoded
             const user=await User.findById(decoded.userId).select("-password")
             if (!user) {
-               res.status(401).json({message:"No user find"})
+               return  res.status(401).json({message:"No user find"})
                
             }
+  
             
             req.user=user
             next()
