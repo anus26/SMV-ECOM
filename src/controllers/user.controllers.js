@@ -51,7 +51,8 @@ const sigin=async(req,res)=>{
 
     const token=createTokencookie(res,user)
  
-    const { password: _, ...safeUser } = user._doc;
+const safeUser = user.toObject()
+delete safeUser.password
     res.status(200).json({message:"user singin successfully",safeUser,jwt:token})
 }
          catch (error) {
@@ -62,7 +63,7 @@ const sigin=async(req,res)=>{
 
 const alluser=async(req,res)=>{
     try {
-        let User
+        let user
         if (req.user.role === "customer" || req.user.role === "seller") {
             user = await User.find({ sellerId: req.user._id });  
         }else{
