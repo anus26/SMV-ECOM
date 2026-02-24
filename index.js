@@ -17,7 +17,7 @@ app.use("/api/v1/webhook",webhookrouter)
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
-  origin:"https://frontend-smv-ecom.vercel.app/",
+  origin:"https://frontend-smv-ecom.vercel.app",
   credentials:true
 }))
 app.use(cookieParser())
