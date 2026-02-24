@@ -17,7 +17,7 @@ webhookrouter.post(
             if (event.type==="payment_intent.succeeded") {
                 const paymentIntent=event.data.object
                 const orderId=paymentIntent.metadata.orderId
-                console.log("Metadata:", paymentIntent.metadata);
+                
                 const order=await Order.findById(orderId)
                 if (order) {
                     order.status='paid'
