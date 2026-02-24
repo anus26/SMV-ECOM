@@ -39,15 +39,15 @@ const order=async(req,res)=>{
             totalAmount,
         })
         await newOrder.save()
-        const paymentIntend=await Stripe.paymentIntents.create({
-            amount:totalAmount*100,
-            currency:"inr",
-            metadata:{
-                orderId:newOrder._id.toString()
-            }
-        })
-        newOrder.stripePaymentIntentId=paymentIntend.id
-        await newOrder.save()
+    // Create Stripe PaymentIntent
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: totalAmount * 100, // in paise
+      currency: "inr",
+      metadata: { orderId: newOrder._id.toString() },
+    });
+
+    newOrder.stripePaymentIntentId = paymentIntent.id;
+    await newOrder.save();
         // const order=new Order({
         //     customerid,
         //    items:updatedItems,
