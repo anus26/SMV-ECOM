@@ -1,8 +1,10 @@
 import express from "express"
 import Order from "../models/ordermodels.js"
-import { stripe } from "../configstripe/stripe.js"
+import Stripe from "stripe";
 
 const webhookrouter=express.Router()
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
 webhookrouter.post(
     "/webhook",
     express.raw({type:"application/json"}),

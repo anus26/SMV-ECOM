@@ -22,6 +22,7 @@
   "start": "node index.js",
   "dev": "nodemon index.js"
 },
+
   "repository": {
     "type": "git",
     "url": "git+https://github.com/anus26/SMV-ECOM.git"
@@ -33,5 +34,8 @@
   "bugs": {
     "url": "https://github.com/anus26/SMV-ECOM/issues"
   },
-  "homepage": "https://github.com/anus26/SMV-ECOM#readme"
+  "homepage": "https://github.com/anus26/SMV-ECOM#readme",
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
 }

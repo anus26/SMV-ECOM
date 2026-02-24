@@ -1,4 +1,4 @@
-import { stripe } from "../configstripe/stripe.js";
+import Stripe from "stripe";
 import Order from "../models/ordermodels.js"
 import Product from "../models/product.models.js";
 
@@ -39,7 +39,7 @@ const order=async(req,res)=>{
             totalAmount,
         })
         await newOrder.save()
-        const paymentIntend=await stripe.paymentIntents.create({
+        const paymentIntend=await Stripe.paymentIntents.create({
             amount:totalAmount*100,
             currency:"inr",
             metadata:{
