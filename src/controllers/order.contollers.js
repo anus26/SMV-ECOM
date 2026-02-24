@@ -48,13 +48,13 @@ const order=async(req,res)=>{
         })
         newOrder.stripePaymentIntentId=paymentIntend.id
         await newOrder.save()
-        const order=new Order({
-            customerid,
-           items:updatedItems,
-           totalAmount
+        // const order=new Order({
+        //     customerid,
+        //    items:updatedItems,
+        //    totalAmount
             
-        })
-        await order.save()
+        // })
+        // await order.save()
         res.status(201).json({message:"Order is  successfully add",order:newOrder ,ClinetSecret:paymentIntend.client_secret})
     } catch (error) {
         console.error(error);

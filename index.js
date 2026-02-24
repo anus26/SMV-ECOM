@@ -13,12 +13,12 @@ import adminrouter from './src/routes/admin.routes.js'
 import webhookrouter from './src/routes/webhook.routes.js'
 
 const app = express()
-app.use("/api/v1",webhookrouter)
+app.use("/api/v1/webhook",webhookrouter)
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
-  // origin:"https://frontend-smv-ecom-b43cybf3x-anusrazas-projects.vercel.app",
-  origin:'http://localhost:5173',
+  origin:"https://frontend-smv-ecom-b43cybf3x-anusrazas-projects.vercel.app",
+  // origin:'http://localhost:5173',
   credentials:true
 }))
 app.use(cookieParser())

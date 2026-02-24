@@ -17,6 +17,7 @@ webhookrouter.post(
             if (event.type==="payment_intent.succeeded") {
                 const paymentIntent=event.data.object
                 const orderId=paymentIntent.metadata.orderId
+                console.log("Metadata:", paymentIntent.metadata);
                 const order=await Order.findById(orderId)
                 if (order) {
                     order.status='paid'
@@ -27,9 +28,9 @@ webhookrouter.post(
             }
             res.json({received:true})
         } catch (error) {
-          console.log("❌ Webhook Error:", err.message);
-      res.status(400).send(`Webhook Error: ${err.message}`);  
-        }
+  console.log("❌ Webhook Error:", error.message);
+  res.status(400).send(`Webhook Error: ${error.message}`);
+}
     }
 )
 export default webhookrouter
