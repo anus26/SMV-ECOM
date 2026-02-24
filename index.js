@@ -17,8 +17,7 @@ app.use("/api/v1/webhook",webhookrouter)
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
-  origin:"https://frontend-smv-ecom.vercel.app",
-
+  origin:"https://frontend-smv-ecom.vercel.app/",
   credentials:true
 }))
 app.use(cookieParser())
@@ -33,6 +32,8 @@ app.use("/api/v1/order",orderRoutes)
 app.use("/api/v1/category",categoryrouter)
 app.use("/api/v1/revenue",revenuerouter)
 app.use("/api/v1/admin",adminrouter)
-app.listen(process.env.PORT, () => {
-  console.log(`Example app listening on port ${process.env.PORT}`)
-})
+const PORT = process.env.PORT || 4000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
