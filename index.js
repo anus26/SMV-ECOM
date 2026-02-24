@@ -13,7 +13,7 @@ import adminrouter from './src/routes/admin.routes.js'
 import webhookrouter from './src/routes/webhook.routes.js'
 
 const app = express()
-// app.use("/api/v1/webhook",webhookrouter)
+app.use("/api/v1/webhook",webhookrouter)
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
