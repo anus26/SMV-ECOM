@@ -40,7 +40,7 @@ const order=async(req,res)=>{
         })
         await newOrder.save()
     // Create Stripe PaymentIntent
-    const paymentIntent = await stripe.paymentIntents.create({
+    const paymentIntent = await Stripe.paymentIntents.create({
       amount: totalAmount * 100, // in paise
       currency: "inr",
       metadata: { orderId: newOrder._id.toString() },
