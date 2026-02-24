@@ -9,7 +9,7 @@ const authmiddleware=async(req,res,next)=>{
             return res.status(401).json({message:"UnAthorized:No token Provided "})
          }
          try {
-            const decoded=jwt.verify(token,process.env.JWT)
+            const decoded=jwt.verify(token,process.env.JWT_SECRET)
             req.user=decoded
             const user=await User.findById(decoded.userId).select("-password")
             if (!user) {
