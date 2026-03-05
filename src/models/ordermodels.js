@@ -20,7 +20,7 @@ items: [
 
     totalAmount:{type:Number},
     status:{type:String,
-    enum: ["pending", "paid","cancaled"],
+    enum: ["pending", "paid"],
       default: "pending",
     },
     stripePaymentIntentId:String

@@ -1,7 +1,9 @@
 import Stripe from "stripe";
 import Order from "../models/ordermodels.js"
 import Product from "../models/product.models.js";
+ 
 
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const order=async(req,res)=>{
     try {
           console.log("USER:", req.user);
@@ -40,7 +42,9 @@ const order=async(req,res)=>{
         })
         await newOrder.save()
     // Create Stripe PaymentIntent
-    const paymentIntent = await Stripe.paymentIntents.create({
+    console.log(Order)
+
+    const paymentIntent = await stripe.paymentIntents.create({
       amount: totalAmount * 100, // in paise
       currency: "inr",
       metadata: { orderId: newOrder._id.toString() },
@@ -55,7 +59,7 @@ const order=async(req,res)=>{
             
         // })
         // await order.save()
-        res.status(201).json({message:"Order is  successfully add",order:newOrder ,ClinetSecret:paymentIntend.client_secret})
+        res.status(201).json({message:"Order is  successfully add",order:newOrder ,ClinetSecret:paymentIntent.client_secret})
     } catch (error) {
         console.error(error);
         return res.status(500).json({message:"Internal server error"})
