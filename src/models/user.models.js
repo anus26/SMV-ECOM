@@ -18,6 +18,10 @@ const userSchema=new mongoose.Schema({
       type: Boolean,
       default: false,
     },
+     otp:String,
+    otpExpire:Date,
+    resetPasswordToken: String,
+resetPasswordExpire: Date
 },{timestamps:true})
 const User=mongoose.model("user",userSchema)
 export default User

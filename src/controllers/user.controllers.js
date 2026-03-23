@@ -1,7 +1,8 @@
 import createTokencookie from "../../jwt/genrettoken.js";
 import User from "../models/user.models.js"
 import bcrypt, { hash }  from "bcryptjs";
-
+import crypto from 'crypto'
+import { sendMail } from "../utils/nodmailor/sendMail.js";
 
 const sigup=async(req,res)=>{
     let {name,email,password,role}=req.body
@@ -119,5 +120,124 @@ const logout=async(req,res)=>{
     }
 }
 
+const  sendMailocn=async(req,res) =>{
+    try {
+        const {to,subject,text}=req.body
+        if (!to||!subject||!text ) {
+                  return res.status(400).json({ error: "Please provide to, subject, and text" });
+        }
+        await sendMail(to,subject,text)
+            res.status(200).json({ message: "Email sent successfully" });
 
-export {sigup,sigin,alluser,userbyId,logout,getMe}
+    } catch (error) {
+           res.status(500).json({ error: "Internal server error" });
+    }
+}
+
+const generateOTP = () => {
+return Math.floor(100000 + Math.random() * 900000).toString();
+};
+const forgetpassword=async(req,res)=>{
+    const {email}=req.body
+    const user=await User.findOne({email})
+    if (!user) {
+        return res.status(400).json({messages:"email not found"})
+    }
+
+    
+
+  const otp = generateOTP();
+
+  user.otp = otp;
+  user.otpExpire = Date.now() + 5 * 60 * 1000; 
+
+await user.save()
+
+        // 5. Send email with reset link
+    const subject = "Password Reset OTP";
+  const   text= `Your OTP is ${otp}. It will expire in 5 minutes.`
+
+  await sendMail(user.email,subject,text)
+  return res.status(200).json({messages:"Password reset email sent successfully"})
+
+}
+// const resetpassword = async (req, res) => {
+//   try {
+//     const { token } = req.params;
+//     const { password } = req.body;
+
+//     const user = await User.findOne({
+//       otp: token,
+//       otpExpire: { $gt: Date.now() },
+//     });
+
+//     if (!user) {
+//       return res.status(400).json({
+//         message: "Invalid or expired OTP",
+//       });
+//     }
+
+//     user.password = password;
+//     user.password = await bcrypt.hash(password, 10)
+//     user.otp = undefined;
+//     user.otpExpire = undefined;
+
+//     await user.save();
+
+//     res.status(200).json({
+//       message: "Password reset successful",
+//     });
+//   } catch (error) {
+//     console.error("Reset Password Error:", error);
+//     res.status(500).json({ error: "Internal server error" });
+//   }
+// };
+
+const verifyToken=async(req,res)=>{
+      console.log("BODY:", req.body); 
+    const {email,otp}=req.body
+    const user=await User.findOne({email})
+    if (!user) {
+        return res.status(400).json({message:"user not exist"})
+    }
+     if (user.otp !== otp) return res.status(400).json({ message: "Invalid OTP" });
+     if(user.otpExpire < Date.now())return res.status(400).json({messages:"OTP Expired"})
+              return res.status(200).json({ message: "OTP verified successfully" });   
+    }
+
+
+
+    const resetpass = async (req, res) => {
+  const { email, otp, newpassword } = req.body;
+
+  const user = await User.findOne({ email });
+
+  if (!user) return res.status(400).json({ message: "User not found" });
+
+  if (user.otp !== otp) {
+    return res.status(400).json({ message: "Invalid OTP" });
+  }
+
+  if (user.otpExpire < Date.now()) {
+    return res.status(400).json({ message: "OTP expired" });
+  }
+
+  const hashpassword = await bcrypt.hash(newpassword, 10);
+
+  user.password = hashpassword;
+  user.otp = null;
+  user.otpExpire = null;
+
+  await user.save();
+
+  res.status(200).json({ message: "Password reset successful" });
+};
+
+const resetpassword=async(req,res)=>{
+  const {token}=req.params
+    await sendMail(User.email)
+      return res.status(200).json({message:"New Otp Send Successfully"})
+}
+
+
+export {sigup,sigin,alluser,userbyId,logout,getMe,sendMailocn,forgetpassword,resetpassword,verifyToken,resetpass}
