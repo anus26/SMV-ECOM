@@ -1,5 +1,5 @@
 import express from "express";
-import { alluser, forgetpassword, getMe, logout, resetpass, resetpassword, sendMailocn, sigin, sigup, userbyId, verifyToken } from "../controllers/user.controllers.js";
+import { alluser, forgetpassword, getMe, logout, resendotp, resetpass,  sendMailocn, sigin, sigup, userbyId, verifyToken } from "../controllers/user.controllers.js";
 import { authmiddleware, authorizationRole, validationmiddleware } from "../middleware/user.middleware.js";
 const router=express.Router()
 router.post("/signup",validationmiddleware,sigup)
@@ -10,7 +10,7 @@ router.get("/me",authmiddleware,getMe)
 router.post("/logout",authmiddleware,logout)
 router.post("/send",sendMailocn)
 router.post("/forgot",forgetpassword)
-router.get("/resetpassword",resetpassword)
 router.post("/verify",verifyToken)
 router.post("/reset",resetpass)
+router.post("/resendotp",resendotp)
 export default router

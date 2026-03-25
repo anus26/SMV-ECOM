@@ -161,8 +161,7 @@ await user.save()
   return res.status(200).json({messages:"Password reset email sent successfully"})
 
 }
-// const resetpassword = async (req, res) => {
-//   try {
+
 //     const { token } = req.params;
 //     const { password } = req.body;
 
@@ -233,11 +232,38 @@ const verifyToken=async(req,res)=>{
   res.status(200).json({ message: "Password reset successful" });
 };
 
-const resetpassword=async(req,res)=>{
-  const {token}=req.params
-    await sendMail(User.email)
-      return res.status(200).json({message:"New Otp Send Successfully"})
-}
+const resendotp = async (req, res) => {
+  try {
+    const { email } = req.body;
 
 
-export {sigup,sigin,alluser,userbyId,logout,getMe,sendMailocn,forgetpassword,resetpassword,verifyToken,resetpass}
+    const user = await User.findOne({ email });
+ if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+
+
+
+
+
+console.log("USER FOUND:", user);
+const otp=generateOTP()
+    user.otp = otp;
+    user.otpExpire = Date.now() + 5 * 60 * 1000;
+
+    await user.save();
+
+   const subject = "OTP Resend";
+  const   text= `Your OTP is ${otp}. It will expire in 5 minutes.`
+    await sendMail(user.email, subject,text);
+
+    res.status(200).json({ messagesotp: "OTP resent successfully" });
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ messagesotp: "Server error" });
+  }
+};
+
+
+export {sigup,sigin,alluser,userbyId,logout,getMe,sendMailocn,forgetpassword,verifyToken,resetpass,resendotp}
