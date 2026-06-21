@@ -12,13 +12,15 @@ import revenuerouter from "./src/routes/revenue.routes.js"
 import adminrouter from './src/routes/admin.routes.js'
 import webhookrouter from './src/routes/webhook.routes.js'
 import forgetrouter from './src/routes/forgetpassword.routes.js'
+import buyrounter from './src/routes/buy.routes.js'
 
 const app = express()
 app.use("/api/v1/webhook",webhookrouter)
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
-  origin:"https://frontend-smv-ecom.vercel.app",
+  // origin:"https://frontend-smv-ecom.vercel.app",
+  origin:"http://localhost:5173",
   credentials:true
 }))
 app.use(cookieParser())
@@ -34,6 +36,7 @@ app.use("/api/v1/category",categoryrouter)
 app.use("/api/v1/revenue",revenuerouter)
 app.use("/api/v1/admin",adminrouter)
 app.use("/api/v1/email",forgetrouter)
+app.use("/api/v1/buyer",buyrounter)
 const PORT = process.env.PORT || 4000;
 
 app.listen(PORT, () => {
