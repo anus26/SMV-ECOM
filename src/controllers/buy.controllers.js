@@ -7,8 +7,7 @@ const buyadd = async (req, res) => {
       FullName,
       Address,
       Area,
-      Office,
-      Home,
+      AddressType,
       City,
       Phone,
       Building,
@@ -20,8 +19,7 @@ const buyadd = async (req, res) => {
       !FullName ||
       !Address ||
       !Area ||
-      !Office ||
-      !Home ||
+      !AddressType ||
       !City ||
       !Phone ||
       !Building ||
@@ -39,8 +37,7 @@ const buyadd = async (req, res) => {
       FullName,
       Address,
       Area,
-      Office,
-      Home,
+     AddressType,
       City,
       Phone,
       Building,

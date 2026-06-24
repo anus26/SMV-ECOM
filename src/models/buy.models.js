@@ -14,8 +14,11 @@ const buySchema=new mongoose.Schema({
     Area:{type:String,required:true},
     Address:{type:String,required:true},
     Colony:{type:String,required:true},
-    Office:{type:String,required:true},
-    Home:{type:String,required:true}
+    AddressType:{
+        type:String,
+        enum:["Home","Office"],
+        required:true
+    }
 
 })
 const Buy=mongoose.model("buy",buySchema)
