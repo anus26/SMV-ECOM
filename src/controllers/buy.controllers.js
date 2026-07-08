@@ -61,5 +61,29 @@ const buyadd = async (req, res) => {
     });
   }
 };
+const getbuy = async (req, res) => {
+  try {
+    const { id } = req.params;
 
-export { buyadd };
+    const buy = await Buy.findById(id);
+
+    if (!buy) {
+      return res.status(404).json({
+        success: false,
+        message: "Buy not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      buy,
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+export { buyadd,getbuy };
