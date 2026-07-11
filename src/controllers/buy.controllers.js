@@ -86,4 +86,76 @@ const getbuy = async (req, res) => {
     });
   }
 };
-export { buyadd,getbuy };
+
+const allbuy=async(req,res)=>{
+  try {
+    const buy=await Buy.find()
+     if (!buy) {
+      return res.status(404).json({
+        success: false,
+        message: "Buy not found",
+      });
+    }
+    return res.status(200).json({
+      success:true,
+      buy
+    })
+  } catch (error) {
+       return res.status(500).json({
+      success: false,
+      message: error.message,
+
+    });
+  }
+}
+
+const getbuybyuser=async(req,res)=>{
+  try {
+    const userId=req.user._id
+        console.log("Logged In User:", userId);
+
+    const buy=await Buy.findOne({userId})
+        console.log("Buy Data:", buy);
+    if (!buy) {
+      return res.status(404).json({
+        success: false,
+        message: "Buy not found",
+      });
+    }
+    return res.status(200).json({
+      success:true,
+      buy
+    })
+  }
+  catch (error) {
+
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+}
+
+const deletebuy=async(req,res)=>{
+  try {
+     const userId=req.user._id 
+    const buy=await Buy.findByIdAndDelete({userId})
+    if (!buy) {
+      return res.status(404).json({
+        success: false,
+        message: "Buy not found",
+      });
+    }
+    return res.status(200).json({
+      success:true,
+      message:"Buy deleted successfully"
+    })
+  }
+  catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+}
+export { buyadd,getbuy,allbuy,getbuybyuser ,deletebuy}
