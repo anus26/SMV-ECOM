@@ -33,7 +33,7 @@ const buyadd = async (req, res) => {
 
     const buy = new Buy({
            userId:req.user._id,
-
+ProductId,
       FullName,
       Address,
       Area,

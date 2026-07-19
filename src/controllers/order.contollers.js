@@ -8,7 +8,7 @@ const order=async(req,res)=>{
     try {
           console.log("USER:", req.user);
     console.log("BODY:", req.body);
-        const {items}=req.body
+        const {items,paymentMethod}=req.body
         const customerid=req.user._id
         if ( !items || items.length === 0  ) {
             return res.status(400).json({ message: "All fields are required" });
@@ -27,7 +27,8 @@ const order=async(req,res)=>{
       totalAmount +=itemTotal
            updatedItems.push({
         productId: product._id,
-        sellerId: product.sellerId,  
+        sellerId: product.sellerId,
+        buyerId: product.buyerId,  
         quantity: item.quantity,
         price: product.price
       });
@@ -39,6 +40,7 @@ const order=async(req,res)=>{
             customerid,
             items:updatedItems,
             totalAmount,
+            paymentMethod
         })
         await newOrder.save()
     // Create Stripe PaymentIntent

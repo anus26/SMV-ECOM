@@ -6,6 +6,10 @@ const buySchema=new mongoose.Schema({
         ref:"User",
         required:true
     },
+    ProductId:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:"Product",      
+    },
     FullName:{type:String,required:true},
     City:{type:String,required:true},
     Phone:{type:Number,required:true},

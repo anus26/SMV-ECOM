@@ -18,10 +18,30 @@ items: [
   }
 ],
 
-    totalAmount:{type:Number},
-    status:{type:String,
-    enum: ["pending", "paid"],
+buyerId: {
+  type: mongoose.Schema.Types.ObjectId,
+  ref:"Buy"
+},
+    totalAmount:{type:Number,
+      required:true
+    },
+
+      // Payment Method
+  paymentMethod: {
+    type: String,
+    enum: ["JazzCash", "EasyPaisa", "Cash", "Bank", "Stripe"],
+    required: true,
+  },
+
+    status:{
+      type:String,
+      enum: ["pending", "paid"],
       default: "pending",
+    },
+    orderStatus:{
+      type:String,
+      enum:["Pending","Processing","Shipped", "Delivered", "Cancelled"],
+      default:"Pending"
     },
     stripePaymentIntentId:String
 },{timestamps:true})
