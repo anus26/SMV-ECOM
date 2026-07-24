@@ -82,6 +82,7 @@ const orderdelete=async(req,res)=>{
         
     }
 }
+
 const orderget=async(req,res)=>{
     try {
         const {id}=req.params
@@ -160,5 +161,18 @@ const allorder = async (req, res) => {
     return res.status(500).json({ message: "Internal server error" });
   }
 };
+const orderall=async(req,res)=>{
+  try {
+    const {id}=req.params
+    const order=await Order.find(id)
+ if (!orderall) {
+                 return res.status(400).json({message:'Order not'})
+        }
+   res.status(200).json({message:'order get successfully',orderall})
+  } catch (error) {
+    console.error("error", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+}
 
-export {order,orderdelete,orderget,orderupdata,allorder}
+export {order,orderdelete,orderget,orderupdata,allorder ,orderall}
