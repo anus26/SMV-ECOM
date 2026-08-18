@@ -7,9 +7,10 @@ items: [
   {
     productId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Product"
+      ref: "product"
     },
     sellerId: {
+
       type: mongoose.Schema.Types.ObjectId,
       ref: "User"
     },
@@ -20,7 +21,7 @@ items: [
 
 buyerId: {
   type: mongoose.Schema.Types.ObjectId,
-  ref:"Buy"
+  ref:"buy"
 },
     totalAmount:{type:Number,
       required:true
@@ -33,11 +34,7 @@ buyerId: {
     required: true,
   },
 
-    status:{
-      type:String,
-      enum: ["pending", "paid"],
-      default: "pending",
-    },
+ 
     orderStatus:{
       type:String,
       enum:["Pending","Processing","Shipped", "Delivered", "Cancelled"],

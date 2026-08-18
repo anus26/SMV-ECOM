@@ -4,70 +4,92 @@ import Product from "../models/product.models.js";
  
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-const order=async(req,res)=>{
-    try {
-          console.log("USER:", req.user);
+const order = async (req, res) => {
+  try {
+    console.log("USER:", req.user);
     console.log("BODY:", req.body);
-        const {items,paymentMethod}=req.body
-        const customerid=req.user._id
-        if ( !items || items.length === 0  ) {
-            return res.status(400).json({ message: "All fields are required" });
-        }
-        let totalAmount=0
-        let updatedItems=[]
 
-        for(let item of items){
-            const product =await Product.findById(item.productId)
-               if (!product) {
-        return res.status(404).json({ message: "Product not found" });
-        
+    const { items, paymentMethod, buyerId ,} = req.body;
 
+    const customerid = req.user._id;
+
+    if (!items || items.length === 0) {
+      return res.status(400).json({
+        message: "Items are required"
+      });
+    }
+
+    if (!buyerId) {
+      return res.status(400).json({
+        message: "Buyer address is required"
+      });
+    }
+
+    let totalAmount = 0;
+    let updatedItems = [];
+
+    for (let item of items) {
+
+      const product = await Product.findById(item.productId);
+
+      if (!product) {
+        return res.status(404).json({
+          message: "Product not found"
+        });
       }
-      const itemTotal=product.price*item.quantity
-      totalAmount +=itemTotal
-           updatedItems.push({
+
+      const itemTotal = product.price * item.quantity;
+
+      totalAmount += itemTotal;
+
+      updatedItems.push({
         productId: product._id,
         sellerId: product.sellerId,
-        buyerId: product.buyerId,  
         quantity: item.quantity,
         price: product.price
       });
-        }
-        if(totalAmount < 50) {
-  totalAmount = 50; // for testing, safe portfolio demo
-}
-        const newOrder=new Order({
-            customerid,
-            items:updatedItems,
-            totalAmount,
-            paymentMethod
-        })
-        await newOrder.save()
-    // Create Stripe PaymentIntent
-    console.log(Order)
+    }
+
+    if (totalAmount < 50) {
+      totalAmount = 50;
+    }
+
+    const newOrder = new Order({
+      customerid,
+      buyerId,                 // ✅ Buy._id
+      items: updatedItems,
+      totalAmount,
+      paymentMethod
+    });
+
+    await newOrder.save();
 
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: totalAmount * 100, // in paise
+      amount: totalAmount * 100,
       currency: "inr",
-      metadata: { orderId: newOrder._id.toString() },
+      metadata: {
+        orderId: newOrder._id.toString()
+      }
     });
 
     newOrder.stripePaymentIntentId = paymentIntent.id;
+
     await newOrder.save();
-        // const order=new Order({
-        //     customerid,
-        //    items:updatedItems,
-        //    totalAmount
-            
-        // })
-        // await order.save()
-        res.status(201).json({message:"Order is  successfully add",order:newOrder ,ClinetSecret:paymentIntent.client_secret})
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({message:"Internal server error"})
-        
-    }
-}
+
+    res.status(201).json({
+      message: "Order is successfully added",
+      order: newOrder,
+      ClinetSecret: paymentIntent.client_secret
+    });
+
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      message: "Internal server error"
+    });
+  }
+};
 const orderdelete=async(req,res)=>{
     try {
         const {id}=req.params
@@ -161,18 +183,31 @@ const allorder = async (req, res) => {
     return res.status(500).json({ message: "Internal server error" });
   }
 };
-const orderall=async(req,res)=>{
+const ordercustomer = async (req, res) => {
+    console.log("Params:", req.params);
   try {
-    const {id}=req.params
-    const order=await Order.find(id)
- if (!orderall) {
-                 return res.status(400).json({message:'Order not'})
-        }
-   res.status(200).json({message:'order get successfully',orderall})
-  } catch (error) {
-    console.error("error", error);
-    return res.status(500).json({ message: "Internal server error" });
-  }
-}
+    const ordercustomer = await Order.find({
+      customerid: req.params.id,
+    })
+    .populate("items.productId")
+    .populate("buyerId");
 
-export {order,orderdelete,orderget,orderupdata,allorder ,orderall}
+    if (ordercustomer.length === 0) {
+      return res.status(404).json({
+        message: "No orders found",
+      });
+    }
+
+    res.status(200).json({
+      message: "Orders fetched successfully",
+      ordercustomer,
+    });
+  } catch (error) {
+    console.error("Error:", error);
+    return res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+};
+
+export {order,orderdelete,orderget,orderupdata,allorder ,ordercustomer}

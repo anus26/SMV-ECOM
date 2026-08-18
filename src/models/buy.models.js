@@ -18,6 +18,7 @@ const buySchema=new mongoose.Schema({
     Area:{type:String,required:true},
     Address:{type:String,required:true},
     Colony:{type:String,required:true},
+    quantity:{type:Number,required:true},
     AddressType:{
         type:String,
         enum:["Home","Office"],
