@@ -125,33 +125,55 @@ const orderget=async(req,res)=>{
 const orderupdata = async (req, res) => {
   try {
     const { id } = req.params;
-    
-    if (!req.body) {
-      return res.status(400).json({ message: "No data sent" });
-    }
+
+    console.log("Order ID:", id);
+    console.log("Request Body:", req.body);
+
     const updateFields = {};
 
-    if (req.body.items) updateFields.items = req.body.items;
-    if (req.body.status) updateFields.status = req.body.status;
-    if (req.body.totalAmount) updateFields.totalAmount = req.body.totalAmount;
+    if (req.body.items) {
+      updateFields.items = req.body.items;
+    }
+
+    // ✅ Correct
+    if (req.body.orderStatus) {
+      updateFields.orderStatus = req.body.orderStatus;
+    }
+
+    if (req.body.totalAmount) {
+      updateFields.totalAmount = req.body.totalAmount;
+    }
 
     const orderupdatas = await Order.findByIdAndUpdate(
       id,
-      { $set: updateFields },
-      { new: true, runValidators: true }
+      {
+        $set: updateFields,
+      },
+      {
+        new: true,
+        runValidators: true,
+      }
     );
 
     if (!orderupdatas) {
-      return res.status(400).json({ message: "Order not found" });
+      return res.status(404).json({
+        message: "Order not found",
+      });
     }
 
-    res.status(200).json({ message: "Order updated", orderupdatas });
+    return res.status(200).json({
+      message: "Order updated successfully",
+      orderupdatas,
+    });
+
   } catch (error) {
-    console.error("error", error);
-    return res.status(500).json({ message: "Internal server error" });
+    console.error("Update Error:", error);
+
+    return res.status(500).json({
+      message: error.message,
+    });
   }
 };
-
 const allorder = async (req, res) => {
   try {
     let allorders;
@@ -209,5 +231,12 @@ const ordercustomer = async (req, res) => {
     });
   }
 };
+const orderpaid=async(req,res)=>{
+  const  {id}=req.params
+  try{
 
+  }catch{
+
+  }
+}
 export {order,orderdelete,orderget,orderupdata,allorder ,ordercustomer}
