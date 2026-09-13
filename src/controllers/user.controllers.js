@@ -207,7 +207,7 @@ const verifyToken=async(req,res)=>{
 
 
     const resetpass = async (req, res) => {
-  const { email, otp, newpassword } = req.body;
+  const { email, otp,newpassword } = req.body;
 
   const user = await User.findOne({ email });
 
@@ -223,7 +223,7 @@ const verifyToken=async(req,res)=>{
 
   const hashpassword = await bcrypt.hash(newpassword, 10);
 
-  user.password = hashpassword;
+  user.password = hashpassword
   user.otp = null;
   user.otpExpire = null;
 
