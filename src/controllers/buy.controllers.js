@@ -3,7 +3,7 @@ import Buy from "../models/buy.models.js";
 const buyadd = async (req, res) => {
   try {
     const {
-        
+      ProductId,
       FullName,
       Address,
       Area,
@@ -16,6 +16,7 @@ const buyadd = async (req, res) => {
     } = req.body;
 
     if (
+      !ProductId ||
       !FullName ||
       !Address ||
       !Area ||
