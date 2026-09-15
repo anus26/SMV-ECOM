@@ -3,6 +3,7 @@ import Buy from "../models/buy.models.js";
 const buyadd = async (req, res) => {
   try {
     const {
+    
       ProductId,
       FullName,
       Address,
@@ -12,7 +13,8 @@ const buyadd = async (req, res) => {
       Phone,
       Building,
       Province,
-      Colony
+      Colony,
+      quantity
     } = req.body;
 
     if (
@@ -25,7 +27,8 @@ const buyadd = async (req, res) => {
       !Phone ||
       !Building ||
       !Province ||
-      !Colony
+      !Colony||
+      !quantity
     ) {
       return res.status(400).json({
         message: "All fields are required"
@@ -43,7 +46,8 @@ ProductId,
       Phone,
       Building,
       Province,
-      Colony
+      Colony,
+      quantity
     });
 
     await buy.save();
