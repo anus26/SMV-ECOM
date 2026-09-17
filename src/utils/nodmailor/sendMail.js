@@ -16,7 +16,7 @@ import nodemailer from "nodemailer"
 export  const sendMail=async(to,subject,text)=>{
     try {
         await transporter.sendMail({
-            from:`'Ecommerce App'<${process.env.EMAIL_USER}> `,
+            from:`'B.Mart'<${process.env.EMAIL_USER}> `,
       to,
       subject,
       text,
@@ -24,6 +24,11 @@ export  const sendMail=async(to,subject,text)=>{
             console.log("✅ Email sent successfully!");
 
     } catch (error) {
-            console.error("❌ Error while sending mail", error);
+            console.error("❌ Error while sending mail");
+    console.error("Message:", error.message);
+    console.error("Code:", error.code);
+    console.error("Response:", error.response);
+
+    throw error; // important
     }
 }
