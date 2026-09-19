@@ -38,6 +38,12 @@ const order = async (req, res) => {
         });
       }
 
+      const  quantity=Number(item.quantity)
+          if (!quantity || quantity < 1) {
+        return res.status(400).json({
+          message: "Invalid quantity",
+        });
+      }
       const itemTotal = product.price * item.quantity;
 
       totalAmount += itemTotal;
@@ -64,22 +70,27 @@ const order = async (req, res) => {
 
     await newOrder.save();
 
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: totalAmount * 100,
-      currency: "inr",
-      metadata: {
-        orderId: newOrder._id.toString()
-      }
-    });
+
+    let clientSecret = null;
+   if (paymentMethod === "Stripe") {
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: Math.round(totalAmount * 100),
+        currency: "inr",
+        metadata: {
+          orderId: newOrder._id.toString(),
+        },
+      });
 
     newOrder.stripePaymentIntentId = paymentIntent.id;
 
     await newOrder.save();
+    clientSecret = paymentIntent.client_secret;
+   }
 
     res.status(201).json({
       message: "Order is successfully added",
       order: newOrder,
-      ClinetSecret: paymentIntent.client_secret
+      clientSecret: paymentIntent.client_secret
     });
 
   } catch (error) {
