@@ -4,8 +4,9 @@ import Order from "../models/ordermodels.js";
 const getTotalRevenue = async (req, res) => {
   try {
 
-    const sellerId = req.user._id;
+    const sellerId = new mongoose.Types.ObjectId(req.user._id);
 
+    console.log("REVENUE SELLER ID:", sellerId)
     const revenue = await Order.aggregate([
 
       { $unwind: "$items" },
@@ -40,7 +41,8 @@ const getTotalRevenue = async (req, res) => {
 };
 const getdailyRevenue=async(req,res)=>{
   try { 
-   const sellerId=req.user._id
+   const sellerId=new mongoose.Types.ObjectId(req.user._id)
+   
    const revenue=await Order.aggregate([
     {$unwind:"$items"},
     {
@@ -74,7 +76,9 @@ return res.json(revenue)
 
 const getMonthlyRevenue = async (req, res) => {
   try {
-    const sellerId = req.user._id;
+      const sellerId = new mongoose.Types.ObjectId(req.user._id);
+
+    console.log("REVENUE SELLER ID:", sellerId);
 
     const revenue = await Order.aggregate([
          { $unwind: "$items" },
