@@ -13,7 +13,7 @@ const getTotalRevenue = async (req, res) => {
       {
         $match: {
           "items.sellerId": sellerId,
-          status: "paid"
+          status: "Delivered"
         }
       },
 
@@ -46,7 +46,7 @@ const getdailyRevenue=async(req,res)=>{
     {
       $match:{
        "items.sellerId": sellerId,
-        status:"paid"
+        status:"Delivered"
       }
     },
     {$group:{
@@ -81,7 +81,7 @@ const getMonthlyRevenue = async (req, res) => {
       {
         $match: {
           "items.sellerId":sellerId,
-          status: "paid"
+          status: "Delivered"
         }
       },
     {$group:{
