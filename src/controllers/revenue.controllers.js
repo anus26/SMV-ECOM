@@ -52,7 +52,7 @@ const getdailyRevenue=async(req,res)=>{
     {$group:{
       _id:{
         $dateToString: {
-        format:"%Y,-%m,-%d",
+        format:"%Y-%m-%d",
           date: { $toDate: "$createdAt" } 
       }},
    totalRevenue: {
@@ -87,7 +87,7 @@ const getMonthlyRevenue = async (req, res) => {
     {$group:{
       _id:{
         $dateToString: {
-        format:"%Y,-%m",
+        format:"%Y-%m",
           date: { $toDate: "$createdAt" } 
       }},
    totalRevenue: {
