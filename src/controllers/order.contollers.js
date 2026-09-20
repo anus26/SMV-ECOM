@@ -9,71 +9,85 @@ const order = async (req, res) => {
     console.log("USER:", req.user);
     console.log("BODY:", req.body);
 
-    const { items, paymentMethod, buyerId ,} = req.body;
+    const { items, paymentMethod, buyerId } = req.body;
 
     const customerid = req.user._id;
 
-    if (!items || items.length === 0) {
+    // Check items
+    if (!items || !Array.isArray(items) || items.length === 0) {
       return res.status(400).json({
-        message: "Items are required"
+        message: "Items are required",
       });
     }
 
+    // Check buyer
     if (!buyerId) {
       return res.status(400).json({
-        message: "Buyer address is required"
+        message: "Buyer address is required",
+      });
+    }
+
+    // Check payment method
+    if (!paymentMethod) {
+      return res.status(400).json({
+        message: "Payment method is required",
       });
     }
 
     let totalAmount = 0;
     let updatedItems = [];
 
-    for (let item of items) {
-
+    for (const item of items) {
       const product = await Product.findById(item.productId);
 
       if (!product) {
         return res.status(404).json({
-          message: "Product not found"
+          message: "Product not found",
         });
       }
 
-      const  quantity=Number(item.quantity)
-          if (!quantity || quantity < 1) {
+      const quantity = Number(item.quantity);
+
+      if (!quantity || quantity < 1) {
         return res.status(400).json({
           message: "Invalid quantity",
         });
       }
-      const itemTotal = product.price * item.quantity;
+
+      const itemTotal = product.price * quantity;
 
       totalAmount += itemTotal;
 
       updatedItems.push({
         productId: product._id,
         sellerId: product.sellerId,
-        quantity: item.quantity,
-        price: product.price
+        quantity: quantity,
+        price: product.price,
       });
     }
 
+    // Minimum order amount
     if (totalAmount < 50) {
       totalAmount = 50;
     }
 
+    // Create order
     const newOrder = new Order({
       customerid,
-      buyerId,                 // ✅ Buy._id
+      buyerId,
       items: updatedItems,
       totalAmount,
-      paymentMethod
+      paymentMethod,
     });
 
     await newOrder.save();
 
-
+    // Stripe payment
+    let paymentIntent = null;
     let clientSecret = null;
-   if (paymentMethod === "Stripe") {
-      const paymentIntent = await stripe.paymentIntents.create({
+
+    if (paymentMethod === "Stripe") {
+      paymentIntent = await stripe.paymentIntents.create({
         amount: Math.round(totalAmount * 100),
         currency: "inr",
         metadata: {
@@ -81,23 +95,24 @@ const order = async (req, res) => {
         },
       });
 
-    newOrder.stripePaymentIntentId = paymentIntent.id;
+      newOrder.stripePaymentIntentId = paymentIntent.id;
 
-    await newOrder.save();
-    clientSecret = paymentIntent.client_secret;
-   }
+      await newOrder.save();
 
-    res.status(201).json({
+      clientSecret = paymentIntent.client_secret;
+    }
+
+    return res.status(201).json({
       message: "Order is successfully added",
       order: newOrder,
-      clientSecret: paymentIntent.client_secret
+      clientSecret,
     });
-
   } catch (error) {
-    console.error(error);
+    console.error("ORDER ERROR:", error);
 
     return res.status(500).json({
-      message: "Internal server error"
+      message: "Internal server error",
+      error: error.message,
     });
   }
 };
